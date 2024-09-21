@@ -320,51 +320,57 @@ int main() {
         cout << arr.capacity << endl;  // 6
         arr.print();
 
-        process_elements(arr, [](int x) {cout << "Array element" << x << "is in processing..." << endl;});
+        process_elements(arr, [](int x) {cout << "Array element " << x << " is in processing..." << endl;});
     }
 
-    cout << "\n----------Stack testing...------------------\n";
-    Stack stack;
-    init_stack(stack);
-    push(stack, 10); 
-    push(stack, 20);  
-    push(stack, 30);
-    cout << stack.arr.size << endl << stack.arr.capacity << endl;
-    stack.print();  // [30  20  10]
-    cout << pop(stack) << endl;  // 30
-    stack.print();  // [20  10]
-    cout << peek(stack) << endl;  // 20
-    stack.print();  // [20  10]
-    process_elements(stack, [](int x) {cout << "Stack element" << x << "is in processing..." << endl;});
+    {
+        cout << "\n----------Stack testing...------------------\n";
+        Stack stack;
+        init_stack(stack);
+        push(stack, 10); 
+        push(stack, 20);  
+        push(stack, 30);
+        cout << stack.arr.size << endl << stack.arr.capacity << endl;
+        stack.print();  // [30  20  10]
+        cout << pop(stack) << endl;  // 30
+        stack.print();  // [20  10]
+        cout << peek(stack) << endl;  // 20
+        stack.print();  // [20  10]
+        process_elements(stack, [](int x) {cout << "Stack element " << x << " is in processing..." << endl;});
+    }
 
-    cout << "\n----------Queue testing...------------------\n";
-    Queue queue;
-    init_queue(queue, 2);
-    // cout << queue.arr.capacity << endl;  // 2
-    add_element(queue, 10);
-    // cout << queue.arr.capacity << endl;  // 2
-    add_element(queue, 20);
-    // cout << queue.arr.capacity << endl;  // 2
-    add_element(queue, 30);
-    // cout << queue.arr.capacity << endl;  // 4
-    queue.print();  // [10  20  30]
-    remove_element(queue);
-    queue.print();  // [20  30]
-    cout << get_front(queue) << endl;  // 20
-    process_elements(queue, [](int x) {cout << "Queue element " << x << " is in processing..." << endl;});
+    {
+        cout << "\n----------Queue testing...------------------\n";
+        Queue queue;
+        init_queue(queue, 2);
+        // cout << queue.arr.capacity << endl;  // 2
+        add_element(queue, 10);
+        // cout << queue.arr.capacity << endl;  // 2
+        add_element(queue, 20);
+        // cout << queue.arr.capacity << endl;  // 2
+        add_element(queue, 30);
+        // cout << queue.arr.capacity << endl;  // 4
+        queue.print();  // [10  20  30]
+        remove_element(queue);
+        queue.print();  // [20  30]
+        cout << get_front(queue) << endl;  // 20
+        process_elements(queue, [](int x) {cout << "Queue element " << x << " is in processing..." << endl;});
+    }
 
-    cout << "\n----------Deque testing...------------------\n";
-    Deque deque;
-    init_deque(deque, 10);
-    add_front(deque, 10);
-    add_front(deque, 20);
-    add_rear(deque, 30);
-    add_rear(deque, 40);
-    deque.print();  // [20  10  30  40]
-    remove_front(deque);
-    remove_rear(deque);
-    deque.print();  // [10  30]
-    cout << get_front(deque) << endl;  // 10
-    cout << get_rear(deque) << endl;  // 30
-    process_elements(deque, [](int x) {cout << "Deque element" << x << "is in processing..." << endl;});
+    {
+        cout << "\n----------Deque testing...------------------\n";
+        Deque deque;
+        init_deque(deque, 10);
+        add_front(deque, 10);
+        add_front(deque, 20);
+        add_rear(deque, 30);
+        add_rear(deque, 40);
+        deque.print();  // [20  10  30  40]
+        remove_front(deque);
+        remove_rear(deque);
+        deque.print();  // [10  30]
+        cout << get_front(deque) << endl;  // 10
+        cout << get_rear(deque) << endl;  // 30
+        process_elements(deque, [](int x) {cout << "Deque element " << x << " is in processing..." << endl;});
+    }
 }
