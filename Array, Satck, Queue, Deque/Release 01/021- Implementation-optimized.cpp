@@ -236,41 +236,79 @@ void init_deque(Deque& deque, int init_capacity) {
     deque.rear = 0;
 }
 
-void add_front(Deque& deque, int element) {
+enum class deque_operations {FRONT, REAR};
+
+void add_element(Deque& deque, int element, deque_operations op) {
     if(deque.arr.size == deque.arr.capacity)
         resize_array(deque.arr);
-    deque.front = (deque.front - 1 + deque.arr.capacity) % deque.arr.capacity;
-    deque.arr.arr_data[deque.front] = element;
-    deque.arr.size ++;
+
+    else {
+        if(op == deque_operations::FRONT) {
+            deque.front = (deque.front - 1 + deque.arr.capacity) % deque.arr.capacity;
+            deque.arr.arr_data[deque.front] = element;
+        }
+        else {
+            deque.arr.arr_data[deque.rear] = element;
+            deque.rear = (deque.rear + 1) % deque.arr.capacity;
+        }
+        deque.arr.size ++;
+    }
 }
 
-void add_rear(Deque& deque, int element) {
-    if(deque.arr.size == deque.arr.capacity)
-        resize_array(deque.arr);
-    deque.arr.arr_data[deque.rear] = element;
-    deque.rear = (deque.rear + 1) % deque.arr.capacity;
-    deque.arr.size ++;
-}
+// void add_front(Deque& deque, int element) {
+//     if(deque.arr.size == deque.arr.capacity)
+//         resize_array(deque.arr);
+//     deque.front = (deque.front - 1 + deque.arr.capacity) % deque.arr.capacity;
+//     deque.arr.arr_data[deque.front] = element;
+//     deque.arr.size ++;
+// }
 
-int remove_front(Deque& deque) {
-    if(deque.arr.is_empty())
-        throw out_of_range("Deque is already empty!\n");
-    int value = deque.arr.arr_data[deque.front];
-    deque.front = (deque.front + 1) % deque.arr.capacity;
-    deque.arr.size --;
-    shrink_array(deque.arr);
-    return value;
-}
+// void add_rear(Deque& deque, int element) {
+//     if(deque.arr.size == deque.arr.capacity)
+//         resize_array(deque.arr);
+//     deque.arr.arr_data[deque.rear] = element;
+//     deque.rear = (deque.rear + 1) % deque.arr.capacity;
+//     deque.arr.size ++;
+// }
 
-int remove_rear(Deque& deque) {
+int remove_element(Deque& deque, deque_operations op) {
+    int value;
     if(deque.arr.is_empty())
         throw out_of_range("Deque is empty!\n");
-    deque.rear = (deque.rear - 1 + deque.arr.capacity) % deque.arr.capacity;
-    int value = deque.arr.arr_data[deque.rear];
-    deque.arr.size --;
-    shrink_array(deque.arr);
+    else{
+        if(op == deque_operations::FRONT) {
+            value = deque.arr.arr_data[deque.front];
+            deque.front = (deque.front + 1) % deque.arr.capacity;
+        }
+        else {
+            deque.rear = (deque.rear - 1 + deque.arr.capacity) % deque.arr.capacity;
+            value = deque.arr.arr_data[deque.rear];
+        }
+        deque.arr.size --;
+        shrink_array(deque.arr);
+    }
     return value;
 }
+
+// int remove_front(Deque& deque) {
+//     if(deque.arr.is_empty())
+//         throw out_of_range("Deque is already empty!\n");
+//     int value = deque.arr.arr_data[deque.front];
+//     deque.front = (deque.front + 1) % deque.arr.capacity;
+//     deque.arr.size --;
+//     shrink_array(deque.arr);
+//     return value;
+// }
+
+// int remove_rear(Deque& deque) {
+//     if(deque.arr.is_empty())
+//         throw out_of_range("Deque is empty!\n");
+//     deque.rear = (deque.rear - 1 + deque.arr.capacity) % deque.arr.capacity;
+//     int value = deque.arr.arr_data[deque.rear];
+//     deque.arr.size --;
+//     shrink_array(deque.arr);
+//     return value;
+// }
 
 int get_front(const Deque& deque) {
     if(deque.arr.is_empty())
@@ -286,7 +324,7 @@ int get_rear(Deque& deque) {
 
 void process_elements(Deque& deque, const function<void(int)>& process_fn) {
     while(!deque.arr.is_empty()) {
-        int element = remove_front(deque);
+        int element = remove_element(deque, deque_operations::FRONT);
         process_fn(element);
     }
 }
@@ -361,16 +399,19 @@ int main() {
         cout << "\n----------Deque testing...------------------\n";
         Deque deque;
         init_deque(deque, 10);
-        add_front(deque, 10);
-        add_front(deque, 20);
-        add_rear(deque, 30);
-        add_rear(deque, 40);
+        add_element(deque, 10, deque_operations::FRONT);
+        add_element(deque, 20, deque_operations::FRONT);
+        add_element(deque, 30, deque_operations::REAR);
+        add_element(deque, 40, deque_operations::REAR);
         deque.print();  // [20  10  30  40]
-        remove_front(deque);
-        remove_rear(deque);
+
+        remove_element(deque, deque_operations::FRONT);
+        remove_element(deque, deque_operations::REAR);
         deque.print();  // [10  30]
+        
         cout << get_front(deque) << endl;  // 10
         cout << get_rear(deque) << endl;  // 30
+        
         process_elements(deque, [](int x) {cout << "Deque element " << x << " is in processing..." << endl;});
     }
 }
