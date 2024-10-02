@@ -1,4 +1,4 @@
-// src/ Array.h
+// src/Array.h
 #ifndef ARRAY_H
 #define ARRAY_H
 
