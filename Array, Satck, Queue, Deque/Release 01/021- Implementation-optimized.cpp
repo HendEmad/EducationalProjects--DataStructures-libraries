@@ -21,9 +21,9 @@ struct Array {
             return;
         }
         cout << "Array content: [";
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) 
             cout << arr_data[i] << " ";
-        }
+        
         cout << "]\n";
     }
 };
@@ -38,17 +38,15 @@ void init_array(Array& arr, int init_capacity = 10) {
 void resize_array(Array& arr, bool is_circular = false, int front = 0, int rear = 0) {
     auto new_arr_data = make_unique<int[]>(arr.capacity * 2);
     
-    if (is_circular) {
+    if (is_circular) 
         // Copy in circular manner from front to rear
-        for (int i = 0; i < arr.size; i++) {
+        for (int i = 0; i < arr.size; i++) 
             new_arr_data[i] = arr.arr_data[(front + i) % arr.capacity];
-        }
-    } else {
+        
+    else 
         // Copy sequentially for non-circular arrays
-        for (int i = 0; i < arr.size; i++) {
+        for (int i = 0; i < arr.size; i++) 
             new_arr_data[i] = arr.arr_data[i];
-        }
-    }
 
     arr.arr_data = move(new_arr_data);  // Move ownership to new array
     arr.capacity *= 2;
@@ -58,16 +56,14 @@ void shrink_array(Array& arr, bool is_circular = false, int front = 0, int rear 
     if (arr.size < arr.capacity / SHRINK_THRESHOLD) {
         // unique_ptr<int> new_arr_data
         auto new_arr_data = make_unique<int[]>(arr.capacity / 2);
-        if(is_circular) {
-            for(int i = 0; i < arr.size; i++) {
+        if(is_circular) 
+            for(int i = 0; i < arr.size; i++) 
                 new_arr_data[i] = arr.arr_data[(front + i) % arr.capacity];
-            }
-        }
-        else{
-            for(int i = 0; i < arr.size; i++) {
+
+        else
+            for(int i = 0; i < arr.size; i++) 
                 new_arr_data[i] = arr.arr_data[i];
-            }
-        }
+            
         
         arr.arr_data = move(new_arr_data);  // Move ownership
         arr.capacity /= 2;
@@ -76,19 +72,61 @@ void shrink_array(Array& arr, bool is_circular = false, int front = 0, int rear 
     }
 }
 
-void add_element(Array& arr, int element) {
-    if (arr.size == arr.capacity) {
-        resize_array(arr);
-    }
-    if(arr.arr_data)
-        arr.arr_data[arr.size++] = element;  // Increment size after assigning
+int is_found(int element, int index){
+    if(index < 0) 
+        return -1;       
+    
+    else 
+        return index;
 }
 
-int remove_element(Array& arr) {
-    if (arr.is_empty()) {
+void search_array(Array& arr, int element) {
+    int idx;
+    for(int i = 0; i < arr.size; i++) 
+        if(arr.arr_data[i] == element) 
+            idx = i;
+
+    is_found(element, idx);
+}
+
+enum class array_operations {FRONT, REAR, AT_INDEX};
+void add_element(Array& arr, int element, array_operations op, int index = -1) {
+    if (arr.size == arr.capacity) 
+        resize_array(arr);
+
+    if(arr.arr_data)
+        if(op == array_operations::REAR)
+            arr.arr_data[arr.size] = element;  // Increment size after assigning
+        else if (op == array_operations::FRONT){
+            for(int i = arr.size; i > 0; i--) 
+                arr.arr_data[i] = arr.arr_data[i - 1];
+            
+            arr.arr_data[0] = element;
+        }
+        else if (op == array_operations::AT_INDEX) {
+            if(index < 0 || index > arr.size) 
+                throw out_of_range("Index is out of range");
+
+            arr.arr_data[index] = element;
+        }
+        arr.size++;
+}
+
+int remove_element(Array& arr, array_operations op) {
+    if (arr.is_empty()) 
         throw out_of_range("Array is empty!\n");
+
+    int value;
+    if(op == array_operations::REAR)
+        value = arr.arr_data[arr.size - 1];
+    else if (op == array_operations::FRONT) {
+        value = arr.arr_data[0];
+        for(int i = 1; i < arr.size; i++) 
+            arr.arr_data[i - 1] = arr.arr_data[i];
     }
-    return arr.arr_data[--arr.size];
+    arr.size--;
+    shrink_array(arr);
+    return value;
 }
 
 void process_elements(Array& arr, const function<void(int)>& process_fn) {
@@ -108,9 +146,9 @@ struct Stack {
             return;
         }
         cout << "Stack content (top to bottom): [";
-        for (int i = arr.size - 1; i >= 0; i--) {
+        for (int i = arr.size - 1; i >= 0; i--) 
             cout << arr.arr_data[i] << " ";
-        }
+        
         cout << "]\n";
     }
 };
@@ -119,14 +157,24 @@ void init_stack(Stack& stack, int init_capacity = 10) {
     init_array(stack.arr, init_capacity);  // Initialize array for the stack
 }
 
+void search_stack(const Stack& stack, int element) {
+    int idx;
+    for(int i = stack.arr.size - 1; i >= 0; i--) {
+        if(stack.arr.arr_data[i] == element)
+            idx = i;
+    }
+    
+    is_found(element, idx);
+}
+
 void push(Stack& stack, int element) {
-    add_element(stack.arr, element);  // Reuse array's add_element
+    add_element(stack.arr, element, array_operations::REAR);  // Reuse array's add_element
 }
 
 int pop(Stack& stack) {
-    if (stack.arr.is_empty()) {
+    if (stack.arr.is_empty()) 
         throw out_of_range("Stack is empty!\n");
-    }
+    
     int value = stack.arr.arr_data[stack.arr.size - 1];  // Access last element
     stack.arr.size--;  // Decrement size after accessing
     shrink_array(stack.arr);  // Optionally shrink the array
@@ -134,9 +182,9 @@ int pop(Stack& stack) {
 }
 
 int peek(const Stack& stack) {
-    if (stack.arr.is_empty()) {
+    if (stack.arr.is_empty()) 
         throw out_of_range("Stack is empty!\n");
-    }
+    
     return stack.arr.arr_data[stack.arr.size - 1];  // Peek at the last element
 }
 
@@ -159,9 +207,9 @@ struct Queue {
             return;
         }
         cout << "Queue content (front to rear): [";
-        for(int i = 0; i < arr.size; i++) {
+        for(int i = 0; i < arr.size; i++) 
             cout << arr.arr_data[(front + i) % arr.capacity] << " ";
-        }
+        
         cout << "]\n";
     }
 };
@@ -186,10 +234,20 @@ void add_element(Queue& queue, int element) {
 int remove_element(Queue& queue) {  
     if(queue.arr.is_empty())
         throw out_of_range("Queue is empty!\n");
+
     int value = queue.arr.arr_data[queue.front];
-    queue.front = (queue.front + 1) % queue.arr.capacity;
-    queue.arr.size --;
+    
+    for(int i = 1; i < queue.arr.size; i++) {
+        int next_index = (queue.front + i) % queue.arr.capacity;
+        int prev_index = (queue.front + i - 1) % queue.arr.capacity;
+        queue.arr.arr_data[prev_index] = queue.arr.arr_data[next_index];
+    }
+
+    queue.rear = (queue.rear - 1 + queue.arr.capacity) % queue.arr.capacity;
+    queue.arr.size--;
+
     shrink_array(queue.arr, true, queue.front, queue.rear);
+
     return value;
 }
 
@@ -208,8 +266,25 @@ void process_elements(Queue& queue, const function<void(int)>& process_fn) {
 int get_front(const Queue& queue) {
     if(queue.arr.is_empty())
         throw out_of_range("Queue is already empty!\n");
+
     return queue.arr.arr_data[queue.front];
 }
+
+void search_queue(const Queue& queue, int element, int front) {
+    int idx;
+    for (int i = 0; i < queue.arr.size; i++) {  
+        int index = (front + i) % queue.arr.capacity;  
+        
+        cout << "Checking index: " << index << " with value: " << queue.arr.arr_data[index] << endl;
+        if (queue.arr.arr_data[index] == element) {
+            idx = index;  
+        }
+    }
+    is_found(element, idx);
+}
+
+
+
 
 // --------------------Deque--------------------------
 struct Deque {
@@ -223,9 +298,9 @@ struct Deque {
             return;
         }
         cout << "Deque content (front to rear): [";
-        for(int i = 0; i < arr.size; i++) {
+        for(int i = 0; i < arr.size; i++) 
             cout << arr.arr_data[(front + i) % arr.capacity] << " ";
-        }
+        
         cout << "]\n";
     }
 };
@@ -255,22 +330,6 @@ void add_element(Deque& deque, int element, deque_operations op) {
     }
 }
 
-// void add_front(Deque& deque, int element) {
-//     if(deque.arr.size == deque.arr.capacity)
-//         resize_array(deque.arr);
-//     deque.front = (deque.front - 1 + deque.arr.capacity) % deque.arr.capacity;
-//     deque.arr.arr_data[deque.front] = element;
-//     deque.arr.size ++;
-// }
-
-// void add_rear(Deque& deque, int element) {
-//     if(deque.arr.size == deque.arr.capacity)
-//         resize_array(deque.arr);
-//     deque.arr.arr_data[deque.rear] = element;
-//     deque.rear = (deque.rear + 1) % deque.arr.capacity;
-//     deque.arr.size ++;
-// }
-
 int remove_element(Deque& deque, deque_operations op) {
     int value;
     if(deque.arr.is_empty())
@@ -289,26 +348,6 @@ int remove_element(Deque& deque, deque_operations op) {
     }
     return value;
 }
-
-// int remove_front(Deque& deque) {
-//     if(deque.arr.is_empty())
-//         throw out_of_range("Deque is already empty!\n");
-//     int value = deque.arr.arr_data[deque.front];
-//     deque.front = (deque.front + 1) % deque.arr.capacity;
-//     deque.arr.size --;
-//     shrink_array(deque.arr);
-//     return value;
-// }
-
-// int remove_rear(Deque& deque) {
-//     if(deque.arr.is_empty())
-//         throw out_of_range("Deque is empty!\n");
-//     deque.rear = (deque.rear - 1 + deque.arr.capacity) % deque.arr.capacity;
-//     int value = deque.arr.arr_data[deque.rear];
-//     deque.arr.size --;
-//     shrink_array(deque.arr);
-//     return value;
-// }
 
 int get_front(const Deque& deque) {
     if(deque.arr.is_empty())
@@ -329,6 +368,20 @@ void process_elements(Deque& deque, const function<void(int)>& process_fn) {
     }
 }
 
+void search_deque(const Array& arr, int element, int front) {
+    int idx;
+    for (int i = 0; i < arr.size; i++) {  
+        int index = (front + i) % arr.capacity;  
+        int normalized_index = i;
+
+        // cout << "Checking index: " << index << " with value: " << arr.arr_data[index] << endl;
+        if (arr.arr_data[index] == element) {
+            idx = normalized_index;              
+        }
+    }
+    is_found(element, idx);
+}
+
 int main() {
     {
         cout << "\n----------Array testing...------------------\n";
@@ -339,24 +392,30 @@ int main() {
         resize_array(arr);
         cout << arr.size << endl;  // 0
         cout << arr.capacity << endl;  // 6 
-        add_element(arr, 5);
-        add_element(arr, 6);
-        add_element(arr, 7);
-        add_element(arr, 8);
-        add_element(arr, 9);
-        add_element(arr, 10);
+        add_element(arr, 5, array_operations::REAR);
+        add_element(arr, 6, array_operations::REAR);
+        add_element(arr, 7, array_operations::REAR);
+        add_element(arr, 8, array_operations::REAR);
+        add_element(arr, 9, array_operations::REAR);
+        add_element(arr, 10, array_operations::REAR);
+        arr.print();
+        
+        add_element(arr, 11, array_operations::FRONT);
         cout << arr.size << endl;  // 6
         cout << arr.capacity << endl;  // 6
         arr.print();  // [5 6 7 8 9 10 ]
 
-        remove_element(arr);
-        remove_element(arr);
+        remove_element(arr, array_operations::REAR);
+        remove_element(arr, array_operations::REAR);
+        remove_element(arr, array_operations::FRONT);
         cout << arr.size << endl;  // 4
         arr.print();  // [5 6 7 8 ]
 
         cout << arr.size << endl;  // 4
         cout << arr.capacity << endl;  // 6
         arr.print();
+
+        search_array(arr, 7);
 
         process_elements(arr, [](int x) {cout << "Array element " << x << " is in processing..." << endl;});
     }
@@ -368,12 +427,15 @@ int main() {
         push(stack, 10); 
         push(stack, 20);  
         push(stack, 30);
-        cout << stack.arr.size << endl << stack.arr.capacity << endl;
+        cout << "Stack size: " << stack.arr.size << ", and its capacity: " << stack.arr.capacity << endl;
         stack.print();  // [30  20  10]
         cout << pop(stack) << endl;  // 30
         stack.print();  // [20  10]
         cout << peek(stack) << endl;  // 20
         stack.print();  // [20  10]
+
+        search_stack(stack, 10);
+
         process_elements(stack, [](int x) {cout << "Stack element " << x << " is in processing..." << endl;});
     }
 
@@ -381,17 +443,21 @@ int main() {
         cout << "\n----------Queue testing...------------------\n";
         Queue queue;
         init_queue(queue, 2);
-        // cout << queue.arr.capacity << endl;  // 2
         add_element(queue, 10);
-        // cout << queue.arr.capacity << endl;  // 2
         add_element(queue, 20);
-        // cout << queue.arr.capacity << endl;  // 2
+        
+        cout << "capacity before resizing array: " << queue.arr.capacity << endl;  // 2
         add_element(queue, 30);
-        // cout << queue.arr.capacity << endl;  // 4
+        cout << "capacity after resizing array: " << queue.arr.capacity << endl;  // 4
         queue.print();  // [10  20  30]
+        
         remove_element(queue);
         queue.print();  // [20  30]
+
         cout << get_front(queue) << endl;  // 20
+        
+        search_queue(queue, 20, queue.front);
+
         process_elements(queue, [](int x) {cout << "Queue element " << x << " is in processing..." << endl;});
     }
 
@@ -399,19 +465,34 @@ int main() {
         cout << "\n----------Deque testing...------------------\n";
         Deque deque;
         init_deque(deque, 10);
-        add_element(deque, 10, deque_operations::FRONT);
-        add_element(deque, 20, deque_operations::FRONT);
-        add_element(deque, 30, deque_operations::REAR);
-        add_element(deque, 40, deque_operations::REAR);
+        cout << deque.front << endl;  // 0
+        add_element(deque, 10, deque_operations::FRONT);  // 10
+        cout << deque.front << endl;  // 9
+        add_element(deque, 20, deque_operations::FRONT);  // 20 10
+        cout << deque.front << endl;  // 8
+        add_element(deque, 30, deque_operations::REAR);  // 20 10 30
+        cout << deque.front << endl;  // 8
+        add_element(deque, 40, deque_operations::REAR);  // 20 10 30 40
+        cout << deque.front << endl;  // 8
         deque.print();  // [20  10  30  40]
-
-        remove_element(deque, deque_operations::FRONT);
-        remove_element(deque, deque_operations::REAR);
+        cout << deque.front << endl;  // 8
+        remove_element(deque, deque_operations::FRONT);  // 10 30 40
+        cout << deque.front << endl;  // 9
+        remove_element(deque, deque_operations::REAR);  // 10 30 
+        cout << deque.front << endl;  // 9
+        cout << deque.rear << endl;  // 1
         deque.print();  // [10  30]
         
+        cout << deque.front << endl; // 9
         cout << get_front(deque) << endl;  // 10
+        cout << deque.front << endl; // 9
+        cout << deque.rear << endl;  // 1
         cout << get_rear(deque) << endl;  // 30
+        cout << deque.front << endl;  // 9
         
+
+        search_deque(deque.arr, 30, deque.front);
+
         process_elements(deque, [](int x) {cout << "Deque element " << x << " is in processing..." << endl;});
     }
 }
