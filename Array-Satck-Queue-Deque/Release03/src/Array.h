@@ -8,7 +8,6 @@
 using namespace std;
 
 enum class data_structures {ARRAY, STACK, QUEUE, DEQUE};
-
 const int SHRINK_THRESHOLD = 4;  // for shrinking threshold
 
 class Array {
