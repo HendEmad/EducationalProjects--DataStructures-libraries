@@ -1,5 +1,6 @@
 // src/Deque.cpp
 #include "Deque.h"
+using namespace std;
 
 Deque::Deque(int init_capacity, int front, int rear) : Array(init_capacity), front(0), rear(0) {}
 
@@ -21,7 +22,7 @@ void Deque::add_element(int element) {
 
 void Deque::add_element(int element, deque_operations op) {
     if(size == capacity) {
-        resize_array(true, front, rear);
+        resize_array(true, front);
         front = 0;
         rear = size;
     }
@@ -56,7 +57,7 @@ int Deque::remove_element (deque_operations op) {
         value = arr_data[rear];
     }
     size--;
-    shrink_array(true, front, rear);
+    shrink_array(true, front);
     return value;
 }
 

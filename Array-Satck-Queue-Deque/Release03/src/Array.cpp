@@ -1,14 +1,15 @@
 // src/Array.cpp
 #include "Array.h"
+using namespace std;
 
-Array::Array(int init_capacity, int size) : capacity(init_capacity) , size(0) {
-    arr_data = make_unique<int[]> (init_capacity);
+Array::Array(int init_capacity, int size) : capacity(init_capacity), size(0) {
+    arr_data = make_unique<int[]>(init_capacity);
 }
 
 // A function to resize the data structure if the size is greater than the capacity
-void Array::resize_array(bool is_circular, int front, int rear) {
+void Array::resize_array(bool is_circular, int front) {
     auto new_arr_data = make_unique<int[]>(capacity * 2);
-        
+
     if (is_circular) {
         for (int i = 0; i < size; i++) {
             new_arr_data[i] = arr_data[(front + i) % capacity];
@@ -19,12 +20,12 @@ void Array::resize_array(bool is_circular, int front, int rear) {
         }
     }
 
-    arr_data = move(new_arr_data);  
+    arr_data = std::move(new_arr_data);
     capacity *= 2;
 }
 
 // A function to shrink the data structure by half if its size less than 1/4 its capacity
-void Array::shrink_array(bool is_circular, int front, int rear) {
+void Array::shrink_array(bool is_circular, int front) {
     if (size < capacity / SHRINK_THRESHOLD) {
         auto new_arr_data = make_unique<int[]>(capacity / 2);
         if(is_circular) {
@@ -37,11 +38,11 @@ void Array::shrink_array(bool is_circular, int front, int rear) {
                 new_arr_data[i] = arr_data[i];
             }
         }
-            
-        arr_data = move(new_arr_data);  
+
+        arr_data = move(new_arr_data);
         capacity /= 2;
-        front = 0;
-        rear = size;
+        // front and rear are passed by value; updating them here has no effect outside
+        // To make front and rear update outside, consider passing by reference
     }
 }
 
@@ -54,7 +55,7 @@ void Array::is_found(int element, int index) {
 
 void Array::search(int element, data_structures ds, int front) {
     if(ds == data_structures::ARRAY) {
-        int idx;
+        int idx = -1;
         for(int i = 0; i < size; i++) 
             if(arr_data[i] == element){
                 idx = i;
@@ -64,7 +65,7 @@ void Array::search(int element, data_structures ds, int front) {
     }
 
     else if(ds == data_structures::STACK) {
-        int idx;
+        int idx = -1;
         for(int i = size - 1; i >= 0; i--) 
             if(arr_data[i] == element){
                 idx = i;
@@ -75,10 +76,10 @@ void Array::search(int element, data_structures ds, int front) {
     }
 
     else if(ds == data_structures::QUEUE) {
-        int idx;
+        int idx = -1;
         for (int i = 0; i < size; i++) {  
             int index = (front + i) % capacity;  
-        
+
             cout << "Checking index: " << index << " with value: " << arr_data[index] << endl;
             if (arr_data[index] == element){ 
                 idx = index;  
@@ -90,14 +91,12 @@ void Array::search(int element, data_structures ds, int front) {
     }
 
     else if(ds == data_structures::DEQUE) {
-        int idx;
+        int idx = -1;
         for (int i = 0; i < size && !is_empty(); i++) {  
             int index = i;  
-            // int normalized_index = i;
 
-            cout << "Checking index: " << i << " with value: " << arr_data[i] << endl;
+            cout << "Checking index: " << index << " with value: " << arr_data[i] << endl;
             if (arr_data[i] == element) {
-                // idx = normalized_index;  
                 idx = i;    
                 break;
             }        
@@ -142,7 +141,8 @@ void Array::add_element(int element) {
 int Array::remove_element() {
     if (is_empty()) 
         throw out_of_range("Array is empty!\n");
-    
+
+    shrink_array();
     return arr_data[--size];   
 }
 
@@ -153,3 +153,4 @@ void Array::process_elements(const function<void(int)>& process_fn) {
         process_fn(element);
     }
 }
+

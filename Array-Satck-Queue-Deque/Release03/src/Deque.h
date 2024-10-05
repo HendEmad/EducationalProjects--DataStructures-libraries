@@ -3,6 +3,7 @@
 #define DEQUE_H
 
 #include "Array.h"
+using namespace std;
 
 enum class deque_operations {FRONT, REAR};
 

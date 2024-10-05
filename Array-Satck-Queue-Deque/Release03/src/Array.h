@@ -5,19 +5,19 @@
 #include <iostream>
 #include <memory>
 #include <functional>
-using namespace std;
 
-enum class data_structures {ARRAY, STACK, QUEUE, DEQUE};
+enum class data_structures { ARRAY, STACK, QUEUE, DEQUE };
+
 const int SHRINK_THRESHOLD = 4;  // for shrinking threshold
 
 class Array {
 protected:
-    unique_ptr<int[]> arr_data;  // The array will have exclusive ownership
+    std::unique_ptr<int[]> arr_data;  // The array will have exclusive ownership
     int capacity;
     int size;
 
-    void resize_array(bool is_circular = false, int front = 0, int rear = 0);
-    void shrink_array(bool is_circular = false, int front = 0, int rear = 0);
+    void resize_array(bool is_circular = false, int front = 0);
+    void shrink_array(bool is_circular = false, int front = 0);
     void is_found(int element, int index);
 
 public:
@@ -27,9 +27,9 @@ public:
     virtual void print() const = 0;
     virtual void add_element(int element) = 0;
     virtual int remove_element() = 0;
-    virtual void process_elements(const function<void(int)>& process_fn) = 0;
-    void search(int element, data_structures ds, int front = -1);
+    virtual void process_elements(const std::function<void(int)>& process_fn) = 0;
     Array(int init_capacity = 10, int size = 0);
+    void search(int element, data_structures ds, int front = -1);
 };
 
 #endif // ARRAY_H

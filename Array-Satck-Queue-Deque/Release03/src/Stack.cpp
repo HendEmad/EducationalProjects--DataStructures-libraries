@@ -1,4 +1,6 @@
+#include "Array.h"
 #include "Stack.h"
+using namespace std;
 
 Stack::Stack(int init_capacity) : Array(init_capacity) {}
 

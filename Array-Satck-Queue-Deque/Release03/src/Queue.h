@@ -3,6 +3,7 @@
 #define QUEUE_H
 
 #include "Array.h"
+using namespace std;
 
 class Queue : public Array {
     int front, rear;

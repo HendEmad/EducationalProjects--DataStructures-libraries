@@ -1,11 +1,12 @@
 // src/Queue.cpp
 #include "Queue.h"
+using namespace std;
 
-Queue::Queue(int init_capacity, int front, int rear) : front(0), rear(0) {}
+Queue::Queue(int init_capacity, int front, int rear) : Array(init_capacity), front(0), rear(0) {}
 
 void Queue::add_element(int element) {
     if(size == capacity){
-        resize_array(true, front, rear);
+        resize_array(true, front);
         front = 0;
         rear = size;
     }
@@ -29,7 +30,7 @@ int Queue::remove_element() {
     rear = (rear - 1 + capacity) % capacity;
     size--;
 
-    shrink_array(true, front, rear);
+    shrink_array(true, front);
 
     return value;
 }
