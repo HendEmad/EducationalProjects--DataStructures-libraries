@@ -2,88 +2,105 @@
 #include "Deque.h"
 using namespace std;
 
-Deque::Deque(int init_capacity, int front, int rear) : Array(init_capacity), front(0), rear(0) {}
+Deque::Deque(int init_capacity) : array(init_capacity), front(0), rear(0) {}
 
-void Deque::print() const {
-    if(is_empty()) {
-        cout << "Deque is already empty!\n";
-        return;
+void Deque::add_element(int element, deque_operations op) {
+    if(array.get_size() == array.get_capacity()) {
+        array.resize_array(true, front, rear);
+        front = 0; 
+        rear = array.get_size();
     }
-    cout << "Deque content (front to rear): [";
-    for(int i = 0; i < size; i++) {
-        cout << arr_data[(front + i) % capacity] << " ";
+    // add_front
+    if(op == deque_operations::FRONT) {
+        front = (front - 1 + array.get_capacity()) % array.get_capacity();
+        array.get_arr_data()[front] = element;
     }
-    cout << "]\n";
+    // add_rear
+    else {
+        array.get_arr_data()[rear] = element;
+        rear = (rear + 1) % array.get_capacity();
+    }
+    array.increase_size_1();
 }
 
 void Deque::add_element(int element) {
     return add_element(element, deque_operations::FRONT);
 }
 
-void Deque::add_element(int element, deque_operations op) {
-    if(size == capacity) {
-        resize_array(true, front);
-        front = 0;
-        rear = size;
-    }
-    // add_front()
+int Deque::remove_element(deque_operations op) {
+    if(array.is_empty())
+        throw out_of_range("Deque is empty\n");
+    
+    int value;
     if(op == deque_operations::FRONT) {
-        front = (front - 1 + capacity) % capacity;
-        arr_data[front] = element;
+        value = array.get_arr_data()[front];
+        front = (front + 1) % array.get_capacity();
     }
-    // add_rear() 
     else {
-        arr_data[rear] = element;
-        rear = (rear + 1) % capacity;
+        rear = (rear - 1 + array.get_capacity()) % array.get_capacity();
+        value = array.get_arr_data()[rear];
     }
-    size++;
+    array.decrease_size_1();
+    array.shrink_array(true, front, rear);
+    return value;
 }
 
 int Deque::remove_element() {
     return remove_element(deque_operations::FRONT);
 }
 
-int Deque::remove_element (deque_operations op) {
-    if(is_empty())
-        throw out_of_range("Deque is already empty");
-    
-    int value;
-    if(op == deque_operations::FRONT) {
-        value = arr_data[front];
-        front = (front + 1) % capacity;
+void Deque::print() {
+    if(array.is_empty()) {
+        cout << "Deque is already empty!\n";
+        return;
     }
-    else {
-        rear = (rear - 1 + capacity) % capacity;
-        value = arr_data[rear];
+    cout << "Deque content (front to rear): [";
+    for(int i = 0; i < array.get_size(); i++) {
+        cout << array.get_arr_data()[(front + i) % array.get_capacity()] << " ";
     }
-    size--;
-    shrink_array(true, front);
-    return value;
+    cout << "]\n";   
 }
 
 int Deque::get_front() {
-    if(is_empty())
-        throw out_of_range("Deque is already empty!\n");
-        
-    return arr_data[front];
+    if(array.is_empty()) 
+        throw out_of_range ("Deque is empty\n");
+    
+    return array.get_arr_data()[front];
 }
 
 int Deque::get_rear() {
-    if(is_empty())
-        throw out_of_range("Deque is already empty!\n");
-        
-    return arr_data[(rear - 1 + capacity) % capacity];
-}
-
-int Deque::get_front_idx() {
-    return front;
+    if(array.is_empty()) 
+        throw out_of_range ("Deque is empty\n");
+    
+    return array.get_arr_data()[(rear - 1 + array.get_capacity()) % array.get_capacity()];   
 }
 
 void Deque::process_elements(const function<void(int)>& process_fn) {
-    // int element = remove_element(deque_operations::FRONT);
-    for(int i = 0; i < size; i++) {
+    for(int i = 0; i < array.get_size(); i++) {
         cout << "The element of index " << i << endl;
-        int element = arr_data[(front + i) % capacity];
+        int element = array.get_arr_data()[(front + i) % array.get_capacity()];
         process_fn(element);
     }
+}
+
+int Deque::get_front_idx() const {
+    return front;
+}
+
+void Deque::search(int element, int front) {
+    int idx = -1;
+    for (int i = 0; i < array.get_size() && !array.is_empty(); i++) {  
+        // int index = i;  
+        int index = (this->front + i) % array.get_capacity();
+        // int normalized_index = i;
+
+        cout << "Checking index: " << i << " with value: " << array.get_arr_data()[index] << endl;
+        if (array.get_arr_data()[index] == element) {
+            // idx = normalized_index;  
+            idx = i;    
+            break;
+        }        
+    }
+
+    array.is_found(element, idx);    
 }
