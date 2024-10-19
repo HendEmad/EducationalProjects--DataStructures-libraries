@@ -14,7 +14,7 @@ FetchContent_MakeAvailable(googletest)
 
 # add test executable with name lib_test
 # compiles lib_test.cpp into lib_test.exe to be used later to run the tests
-add_executable(lib_test lib_test.cpp)
+add_executable(lib_test ArrayTest.cpp StackTest.cpp QueueTest.cpp DequeTest.cpp)
 # link google test libs with lib_test.cpp file allowing to use lib functions such as TEST and EXPECT_EQ
 target_link_directories(lib_test gtest gtest_main)
 
