@@ -128,3 +128,19 @@ int Array::get_element(int index) const {
 int* Array::get_arr_data() {
     return arr_data.get();
 }
+
+int* Array::begin() {
+    return (size > 0) ? &arr_data[0] : nullptr;
+}
+
+const int* Array::cbegin() const{
+    return (size > 0) ? &arr_data[0] : nullptr;
+}
+
+int* Array::end() {
+    return (size > 0) ? &arr_data[size] : nullptr;
+}
+
+const int* Array::cend() const{
+    return (size > 0) ? &arr_data[size] : nullptr;
+}

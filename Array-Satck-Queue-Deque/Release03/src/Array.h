@@ -33,6 +33,10 @@ public:
     int* get_arr_data();
     int decrease_size_1();
     int increase_size_1();
+    int* begin();  // begin() --> pointer
+    const int* cbegin() const;  // cbegin()  --> pointer 
+    int* end();
+    const int* cend() const;
 };
 
 #endif // ARRAY_H
