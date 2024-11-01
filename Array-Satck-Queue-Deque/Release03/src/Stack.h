@@ -5,6 +5,8 @@
 #include "Array.h"
 #include "AbstractDS.h"
 #include <functional>
+#include <utility>
+#include <stdexcept>
 using namespace std;
 
 class Stack : public AbstractDS{
@@ -14,6 +16,12 @@ public:
     void add_element(int element) override;
     int remove_element() override;
     int peek();
+
+    // Variadic emplace function
+    template <typename... Args>  // template to accept multiple parameters
+    void emplace(Args&&... args);  // accepts lvalues and rvalues
+    
+    void swap(Stack& other) noexcept;
     void print() override;
     void process_elements(const function <void(int)>& process_fn) override;
     void search(int element, int front = -1) override;
