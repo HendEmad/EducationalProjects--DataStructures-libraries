@@ -34,8 +34,6 @@ public:
     void clear() override;
     void display() const override;
     void process(const std::function<void(T&)>& func) override;
-    // void insertAfter(ForwardNode* node, T data);
-    // void removeAfter(ForwardNode* node);
     ForwardNode* getFront() const override;
     size_t getSize() const override { return size; }
 };

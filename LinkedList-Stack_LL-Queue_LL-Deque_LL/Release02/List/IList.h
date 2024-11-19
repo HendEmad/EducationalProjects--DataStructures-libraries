@@ -14,7 +14,6 @@ public:
     virtual void pushBack(T data) = 0;
     virtual void insert(size_t index, T data) = 0;
     virtual void erase(size_t index) = 0;
-    virtual void erase() = 0;
     virtual void popFront() = 0;
     virtual void popBack() = 0;
     virtual void clear() = 0;
