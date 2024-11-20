@@ -22,4 +22,4 @@ public:
     ~Stack();
 };
 
-#endif // STACK+H
+#endif // STACK_H
