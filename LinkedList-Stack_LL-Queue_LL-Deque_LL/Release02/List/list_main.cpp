@@ -14,14 +14,14 @@ int main() {
     fl.display(); // Expected: 5 -> 10 -> 20 -> Null
 
     fl2 = fl;
-    fl2.display();  // // Expected: 5 -> 10 -> 20 -> Null
+    fl2.display();  // Expected: 5 -> 10 -> 20 -> Null
 
     ForwardList<int> fl3;
     fl3 = fl2;
-    fl3.display();
+    fl3.display();  // Expected: 5 -> 10 -> 20 -> Null
 
     fl3 = std::move(fl2);
-    fl2.display();
+    fl2.display();  // Null
 
     fl.popFront();
     fl.display(); // Expected: 10 -> 20 -> Null
