@@ -1,5 +1,5 @@
 #include <iostream>
-#include "ForwardList.h"
+#include "List/headers/ForwardList.h"
 
 // construcor
 template <typename T>
@@ -212,4 +212,24 @@ void ForwardList<T>::process(const std::function<void(T&)>& func) {
 template <typename T>
 typename ForwardList<T>::ForwardNode* ForwardList<T>::getFront() const {
     return head.get();
+}
+
+template <typename T>
+T ForwardList<T>::front() const {
+    if(!head) {
+        throw std::runtime_error("List is empty.");
+    }
+    return head ->data;
+}
+
+template <typename T>
+T ForwardList<T>::back() const {
+    if (!head) {
+        throw std::runtime_error("List is empty");
+    }
+    ForwardNode* current = head.get();
+    while (current->next) {
+        current = current->next.get();
+    }  
+    return current->data;
 }

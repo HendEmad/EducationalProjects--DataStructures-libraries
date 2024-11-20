@@ -35,8 +35,10 @@ public:
     void clear() override;
     void display() const override;
     void process(const std::function<void(T&)>& func) override;
-    CircularNode* getFront() const {return head;}
+    T front() const override;
+    T back() const override;
     size_t getSize() const override {return size;}
+    bool isEmpty() const override {return (size == 0);}
 };
 
 #include "CircularList.cpp"

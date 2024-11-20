@@ -20,6 +20,9 @@ public:
     virtual void display() const = 0;
     virtual void process(const std::function<void(T&)>& func) = 0;
     virtual size_t getSize() const = 0;
+    virtual bool isEmpty() const = 0;
+    virtual T front() const;
+    virtual T back() const;
 };
 
 #endif // ILIST_H

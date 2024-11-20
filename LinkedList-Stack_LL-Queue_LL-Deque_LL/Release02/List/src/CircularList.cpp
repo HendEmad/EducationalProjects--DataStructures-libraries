@@ -1,4 +1,4 @@
-#include "CircularList.h"
+#include "List/headers/CircularList.h"
 
 template <typename T>
 CircularList<T>::CircularList() : head(nullptr), tail(nullptr), size(0) {}
@@ -197,4 +197,20 @@ void CircularList<T>::process(const std::function<void(T&)>& func) {
         func(current->data);
         current = current->next;
     } while (current != head);
+}
+
+template <typename T>
+T CircularList<T>::front() const {
+    if (!tail) {
+        throw std::runtime_error("List is empty");
+    }
+    return tail->next->data;
+}
+
+template <typename T>
+T CircularList<T>::back() const {
+    if (!tail) {
+        throw std::runtime_error("List is empty");
+    }
+    return tail->data
 }

@@ -40,8 +40,10 @@ public:
     void display() const override;
     void process(const std::function<void(T&)>& func) override;
     
-    DoublyNode* getFront() const;
+    T front() const override;
+    T back() const override;
     size_t getSize() const override{ return size; }
+    bool isEmpty() const override {return (size == 0);}
 };
 
 #include "DoublyList.cpp"

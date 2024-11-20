@@ -36,6 +36,9 @@ public:
     void process(const std::function<void(T&)>& func) override;
     ForwardNode* getFront() const;
     size_t getSize() const override { return size; }
+    T front() const override;
+    T back() const override;
+    bool isEmpty() const override {return (size == 0);}
 };
 
 #include "ForwardList.cpp"

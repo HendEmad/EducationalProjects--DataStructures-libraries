@@ -1,4 +1,4 @@
-#include "DoublyList.h"
+#include "List/headers/DoublyList.h"
 
 template <typename T>
 DoublyList<T>::DoublyList() : head(nullptr), tail(nullptr), size(0) {}
@@ -194,6 +194,17 @@ void DoublyList<T>::process(const std::function<void(T&)>& func) {
 }
 
 template <typename T>
-typename DoublyList<T>::DoublyNode* DoublyList<T>::getFront() const {
-    return head.get();
+T DoublyList<T>::front() const {
+    if (!head) {
+        throw std::runtime_error("List is empty");
+    }
+    return head->data;
+}
+
+template <typename T>
+T DoublyList<T>::back() const {
+    if (!tail) {
+        throw std::runtime_error("List is empty");
+    }
+    return tail->data;
 }
