@@ -102,7 +102,7 @@ template <typename T>
 void ForwardList<T>::pushBack(T data) {
     auto newNode = std::make_unique <ForwardNode>(data);
     if(!head) {
-        head = std::move(newNode)
+        head = std::move(newNode);
     }
     else {
         ForwardNode* curr = head.get();
@@ -134,7 +134,7 @@ void ForwardList<T>::popBack() {
     size--;
 }
 
-// A function to add element data to a aprticular indes
+// A function to add element data to a particular index
 template <typename T>
 void ForwardList<T>::insert(size_t index, T data) {
     if(index < 0 || index > size) {
@@ -147,11 +147,11 @@ void ForwardList<T>::insert(size_t index, T data) {
     }
 
     ForwardNode* curr = head.get();
-    for(size_t i = 0; i < index; i++) {
+    for(size_t i = 0; i < index - 1; i++) {
         curr = curr ->next.get();
     }
 
-    auto newNode = std::make_unique<ForwardList>(data);
+    auto newNode = std::make_unique<ForwardNode>(data);
     newNode ->next = std::move(curr ->next);
     curr ->next = std::move(newNode);
 
@@ -161,7 +161,7 @@ void ForwardList<T>::insert(size_t index, T data) {
 // A function to delete an element of a node at a particular index
 template <typename T>
 void ForwardList<T>::erase(size_t index) {
-    if(index == 0 || index == size) {
+    if(index < 0 || index > size) {
         throw std::out_of_range("Index out of bounds");
     }
 

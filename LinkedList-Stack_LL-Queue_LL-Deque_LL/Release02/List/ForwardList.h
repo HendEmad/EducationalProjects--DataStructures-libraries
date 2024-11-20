@@ -7,7 +7,7 @@
 #include <memory>
 
 template<typename T>
-class ForwardList : public IList {
+class ForwardList : public IList<T> {
 private:
     struct ForwardNode {
         T data;
@@ -19,11 +19,11 @@ private:
 
 public:
     ForwardList();
-    ~ForwardList() override = default;
+    ~ForwardList();
     ForwardList(const ForwardList& other);  // copy cosntructor
     ForwardList& operator=(const ForwardList& other);  // copy assignemnt operator
-    ForwardList(ForwardList&& other) noexcept = default;  // move constructor
-    ForwardList& operator=(ForwardList&& other) noexcept = default;  // move assignment operator
+    ForwardList(ForwardList&& other) noexcept;  // move constructor
+    ForwardList& operator=(ForwardList&& other) noexcept;  // move assignment operator
 
     void pushFront(T data) override;
     void pushBack(T data) override;
@@ -34,8 +34,9 @@ public:
     void clear() override;
     void display() const override;
     void process(const std::function<void(T&)>& func) override;
-    ForwardNode* getFront() const override;
+    ForwardNode* getFront() const;
     size_t getSize() const override { return size; }
 };
 
+#include "ForwardList.cpp"
 #endif // FORWARDLIST_H
