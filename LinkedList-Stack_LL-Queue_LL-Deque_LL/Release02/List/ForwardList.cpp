@@ -40,7 +40,7 @@ ForwardList<T>& ForwardList<T>::operator= (const ForwardList& other) {
     }
     clear();
     ForwardNode* curr = other.head.get();
-    ForwardList* tail = nullptr;
+    ForwardNode* tail = nullptr;
     while(curr) {
         auto newNode = std::make_unique<ForwardNode> (curr -> data);
         if(!head) {
