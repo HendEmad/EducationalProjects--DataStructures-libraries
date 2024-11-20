@@ -8,7 +8,7 @@
 #include "IList.h"
 
 template <typename T>
-class DoublyList : public IList {
+class DoublyList : public IList <T>{
 private:
     struct DoublyNode {
         T data;
@@ -24,11 +24,11 @@ private:
 
 public:
     DoublyList();
-    ~DoublyList() override = default;
+    ~DoublyList();
     DoublyList(const DoublyList& other);
-    DoublyList(DoublyList&& other) noexcept = default;
+    DoublyList(DoublyList&& other) noexcept;
     DoublyList& operator=(const DoublyList& other);
-    DoublyList& operator=(DoublyList&& other) noexcept = default;
+    DoublyList& operator=(DoublyList&& other) noexcept;
 
     void pushFront(T data) override;
     void pushBack(T data) override;
@@ -40,8 +40,9 @@ public:
     void display() const override;
     void process(const std::function<void(T&)>& func) override;
     
-    DoublyNode* getFront() const override;
+    DoublyNode* getFront() const;
     size_t getSize() const override{ return size; }
 };
 
+#include "DoublyList.cpp"
 #endif // DOUBLY_LIST_H
