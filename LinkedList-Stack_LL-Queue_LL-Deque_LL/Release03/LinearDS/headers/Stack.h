@@ -1,8 +1,8 @@
 #ifndef STACK_H
 #define STACK_H
 
-#include "Release02/LinearDS/headers/IDataStructure.h"
-#include "Release02/List/headers/IList.h"
+#include "Release03/LinearDS/headers/IDataStructure.h"
+#include "Release03/List/headers/IList.h"
 #include <functional>
 
 template <typename T>
